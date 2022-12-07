@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  dev-postgres:
+    image: postgres:14.4-alpine
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: toranoi-user
+      POSTGRES_PASSWORD: toranoi-password
+      POSTGRES_DB: toranoi-db
+    restart: always
+    networks:
+      - toranoi
+networks:
+  toranoi:
