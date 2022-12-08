@@ -13,7 +13,7 @@ datasource db {
 // サービスの性質上イミュータブルデータモデルは採用しない
 model User {
   id             String        @id @default(uuid())
-  name           String
+  name           String        @unique
   hashedPassword String
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
