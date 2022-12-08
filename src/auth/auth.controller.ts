@@ -38,8 +38,9 @@ export class AuthController {
     res.cookie('access_token', jwt.accessToken, {
       httpOnly: true,
       // Postmanで確認するときはsecureはfalseにする
-      secure: true,
+      // toranoi-pickerから確認する場合はtrueにしないとログインできない
       sameSite: 'none',
+      secure: true,
       path: '/'
     });
 
@@ -54,8 +55,8 @@ export class AuthController {
   ): Msg {
     res.cookie('access_token', '', {
       httpOnly: true,
-      secure: true,
       sameSite: 'none',
+      secure: true,
       path: '/',
     });
     return { message: 'ok' }
