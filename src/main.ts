@@ -12,7 +12,7 @@ async function bootstrap() {
   app.enableCors({
     credentials: true,
     // BEへのアクセスを許可するドメインのリスト
-    origin: ['http://localhost:3000']
+    origin: ['http://localhost:3000', 'https://toranoi-list-frontend.vercel.app']
   })
   // cookieを解析する
   app.use(cookieParser());
