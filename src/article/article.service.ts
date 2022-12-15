@@ -25,7 +25,7 @@ export class ArticleService {
     });
   
     const articleHeadBodies = articles.map((article) => ({
-      articleId: article.article.id,
+      id: article.article.id,
       siteTitle: article.article.siteTitle,
       siteUrl: article.article.siteUrl,
       abstractText: article.article.ArticleBody.abstractText
@@ -65,7 +65,7 @@ export class ArticleService {
     console.log('userArticle: ' + userArticle);
 
     return ({
-      articleId: articleId,
+      id: articleId,
       siteTitle : articleHead.siteTitle,
       siteUrl : articleHead.siteUrl,
       abstractText : articleBody.abstractText,
@@ -112,7 +112,7 @@ export class ArticleService {
     })
 
     return {
-      articleId: updatedArticleHead.id,
+      id: updatedArticleHead.id,
       siteTitle : updatedArticleHead.siteTitle,
       siteUrl : updatedArticleHead.siteUrl,
       abstractText : updatedArticleBody.abstractText,
@@ -120,12 +120,11 @@ export class ArticleService {
   }
 
   // 削除する順番はarticleBody > userArticle > articleHead
-  async deleteArticleById(userId: string, dto: DeleteArticleDto): Promise<void> {
-    
+  async deleteArticleById(userId: string, articleId: string): Promise<void> {
 
     await this.prisma.articleBody.delete({
       where: {
-        articleId: dto.articleId
+        articleId: articleId
       }
     });
 
@@ -133,14 +132,14 @@ export class ArticleService {
       where: {
         userId_articleId: {
           userId: userId,
-          articleId: dto.articleId,
+          articleId: articleId,
         }
       }
     });
 
     await this.prisma.articleHead.delete({
       where: {
-        id: dto.articleId
+        id: articleId
       }
     });
   }
