@@ -39,6 +39,6 @@ export class ArticleController {
     @Req() req: Request,
     @Body() dto: DeleteArticleDto
   ): Promise<void> {
-    return this.articleService.deleteArticleById(req.user.id, dto.articleId)
+    return this.articleService.deleteArticleById(req.user.id, dto.id)
   }
 }

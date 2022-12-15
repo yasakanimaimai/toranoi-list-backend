@@ -4,7 +4,7 @@ export class UpdateArticleDto {
 
   @IsString()
   @IsNotEmpty()
-  articleId: string;
+  id: string;
   
   @IsString()
   @IsNotEmpty()

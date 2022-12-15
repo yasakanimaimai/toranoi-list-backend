@@ -79,7 +79,7 @@ export class ArticleService {
     const article = await this.prisma.userArticle.findFirst({
       where: {
         userId: userId,
-        articleId: dto.articleId,
+        articleId: dto.id,
       },
       include: {
         article: {
@@ -94,7 +94,7 @@ export class ArticleService {
 
     const updatedArticleHead = await this.prisma.articleHead.update({
       where: {
-        id: dto.articleId,
+        id: dto.id,
       },
       data: {
         siteTitle: dto.siteTitle,
@@ -104,7 +104,7 @@ export class ArticleService {
 
     const updatedArticleBody = await this.prisma.articleBody.update({
       where: {
-        articleId: dto.articleId,
+        articleId: dto.id,
       },
       data: {
         abstractText: dto.abstractText
