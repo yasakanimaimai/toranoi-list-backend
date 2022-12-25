@@ -1,37 +1,32 @@
-import { Injectable } from "@nestjs/common"
-import { ConfigService } from "@nestjs/config"
-import { PassportStrategy } from "@nestjs/passport"
-import { ExtractJwt, Strategy } from "passport-jwt"
-import { PrismaService } from "src/prisma/prisma.service"
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { passportJwtSecret } from 'jwks-rsa';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(
-    private readonly config: ConfigService,
-    private readonly prisma: PrismaService,
-  ) {
-    super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (req) => {
-          let jwt = null;
-          if (req && req.cookies) {
-            jwt = req.cookies['access_token'];
-          }
-          return jwt;
-        },
-      ]),
-      ignoreExpiration: false,
-      secretOrKey: config.get('JWT_SECRET'),
-    });
-  }
+export class JwtStrategy extends PassportStrategy(Strategy) {
+ constructor() {
+   super({
+     secretOrKeyProvider: passportJwtSecret({
+       cache: true,
+       rateLimit: true,
+       jwksRequestsPerMinute: 5,
+       jwksUri: `${process.env.AUTH0_DOMAIN}.well-known/jwks.json`,
+     }),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    audience: process.env.AUTH0_IDENTIFIER,
+    issuer: process.env.AUTH0_DOMAIN,
+    algorithms: ['RS256'],
+   });
+ }
 
-  async validate(payload: { sub: string; userName: string}) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: payload.sub,
-      },
-    });
-    delete user.hashedPassword;
+  validate(payload: unknown): unknown {
+    const user = {
+      email: ''
+    }
+
+    Logger.log('info', payload)
     return user;
   }
 }

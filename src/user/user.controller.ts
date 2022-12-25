@@ -17,10 +17,18 @@ import { User } from '@prisma/client';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('private')
+  getPrivate(): string {
+    return "private";
+  }
+
   @Get('get')
-  getLoginUser(@Req() req: Request): Omit<User, 'hashedPassword'> {
+  getLoginUser(@Req() req: Request) {
     return req.user;
   }
+  // getLoginUser(@Req() req: Request): Omit<User, 'hashedPassword'> {
+  //   return req.user;
+  // }
 
   @Patch('update')
   updateUser(
