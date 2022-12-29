@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, ParseIntPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ArticleService } from './article.service';
 import { Request } from 'express';
@@ -12,7 +12,7 @@ import { DeleteArticleDto } from './dto/deleteArticle.dto';
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
-  @Get()
+  @Get('get')
   getTasks(@Req() req: Request): Promise<ArticleHeadBody[]> {
     return this.articleService.getArticles(req.user.id)
   }
@@ -22,6 +22,7 @@ export class ArticleController {
     @Req() req: Request,
     @Body() dto: CreateArticleDto
   ): Promise<ArticleHeadBody> {
+    Logger.log("articleController create")
     return this.articleService.createArticle(req.user.id, dto);
   }
 
@@ -39,6 +40,7 @@ export class ArticleController {
     @Req() req: Request,
     @Body() dto: DeleteArticleDto
   ): Promise<void> {
+    Logger.log("deleteTaskById dto:" + JSON.stringify(dto))
     return this.articleService.deleteArticleById(req.user.id, dto.id)
   }
 }

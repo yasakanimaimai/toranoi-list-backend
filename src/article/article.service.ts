@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { ArticleHead, ArticleBody, UserArticle } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ArticleHeadBody } from './dto/articleHeadBody.dto';
@@ -39,13 +39,15 @@ export class ArticleService {
     dto: CreateArticleDto
   ): Promise<ArticleHeadBody> {
 
+    Logger.log('info', "createArticle")
+
     const articleHead = await this.prisma.articleHead.create({
       data: {
         siteTitle: dto.siteTitle,
         siteUrl: dto.siteUrl,
       }
     });
-    console.log('articleHead: ' + articleHead);
+    
 
     const articleId = articleHead.id;
     const articleBody = await this.prisma.articleBody.create({
@@ -54,7 +56,7 @@ export class ArticleService {
         abstractText: dto.abstractText,
       }
     })
-    console.log('articleBody: ' + articleBody);
+    
     
     const userArticle = await this.prisma.userArticle.create({
       data: {
@@ -62,7 +64,9 @@ export class ArticleService {
         articleId: articleId,
       },
     })
-    console.log('userArticle: ' + userArticle);
+
+    
+    
 
     return ({
       id: articleId,

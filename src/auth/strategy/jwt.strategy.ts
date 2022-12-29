@@ -1,12 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 import { Logger } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
- constructor() {
+  constructor(
+    private readonly config: ConfigService,
+    private readonly prisma: PrismaService,
+  ) {
    super({
      secretOrKeyProvider: passportJwtSecret({
        cache: true,
@@ -21,12 +26,28 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    });
  }
 
-  validate(payload: unknown): unknown {
-    const user = {
-      email: ''
-    }
+  async validate(payload: any) {
 
     Logger.log('info', payload)
+
+    let user = await this.prisma.user.findUnique({
+      where: {
+        email: payload["addrules/email"],
+      }
+    })
+
+    Logger.log('info', "アクセスuser:" + user)
+
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          email: payload["addrules/email"],
+          name: payload["addrules/name"],
+        },
+      });
+      Logger.log('info', "新規作成user:" + user)
+    }
+
     return user;
   }
 }

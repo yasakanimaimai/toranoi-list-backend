@@ -12,12 +12,12 @@ datasource db {
 
 // サービスの性質上イミュータブルデータモデルは採用しない
 model User {
-  id             String        @id @default(uuid())
-  name           String        @unique
-  hashedPassword String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  UserArticle    UserArticle[]
+  id          String        @id @default(uuid())
+  email       String        @unique
+  name        String        @default("")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  UserArticle UserArticle[]
 }
 
 model UserArticle {

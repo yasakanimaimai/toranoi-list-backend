@@ -19,7 +19,6 @@ export class UserService {
         ...dto
       },
     });
-    delete user.hashedPassword;
     return user
   }
 }
