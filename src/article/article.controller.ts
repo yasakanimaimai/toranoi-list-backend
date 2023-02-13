@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Logger, Param, ParseIntPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { 
+  Body, 
+  Controller, 
+  Delete, 
+  Get, 
+  HttpCode, 
+  HttpStatus, 
+  Logger, 
+  Patch, 
+  Post, 
+  Req, 
+  UseGuards
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ArticleService } from './article.service';
 import { Request } from 'express';
@@ -14,6 +26,7 @@ export class ArticleController {
 
   @Get('get')
   getTasks(@Req() req: Request): Promise<ArticleHeadBody[]> {
+    Logger.log("articleController get")
     return this.articleService.getArticles(req.user.id)
   }
 
@@ -31,6 +44,7 @@ export class ArticleController {
     @Req() req: Request,
     @Body() dto: UpdateArticleDto,
   ): Promise<ArticleHeadBody> {
+    Logger.log("articleController update")
     return this.articleService.updateArticleById(req.user.id, dto)
   }
 
@@ -40,7 +54,7 @@ export class ArticleController {
     @Req() req: Request,
     @Body() dto: DeleteArticleDto
   ): Promise<void> {
-    Logger.log("deleteTaskById dto:" + JSON.stringify(dto))
+    Logger.log("articleController delete")
     return this.articleService.deleteArticleById(req.user.id, dto.id)
   }
 }

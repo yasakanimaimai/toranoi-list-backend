@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
@@ -36,8 +36,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       }
     })
 
-    Logger.log('info', "アクセスuser:" + user)
-
     if (!user) {
       user = await this.prisma.user.create({
         data: {
@@ -45,7 +43,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           name: payload["addrules/name"],
         },
       });
-      Logger.log('info', "新規作成user:" + user)
     }
 
     return user;

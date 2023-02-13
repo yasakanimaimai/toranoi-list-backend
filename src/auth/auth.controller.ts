@@ -3,7 +3,7 @@ import {
   Req,
   Get,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { Csrf } from './interfaces/auth.interface';
 

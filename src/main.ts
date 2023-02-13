@@ -7,28 +7,24 @@ import * as csurf from 'csurf'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // dtoでのclass-validatorを有効化
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }))
   app.enableCors({
     credentials: true,
-    // BEへのアクセスを許可するドメインのリスト
-    origin: ['http://localhost:3000', 'https://toranoi-list-frontend.vercel.app', 'chrome-extension://ndhjnbhhijpobdlgbmbmchgilhmanapn'],
-    // origin: '*',
+    origin: [
+      process.env.LOCAL_FRONT_URL, 
+      process.env.PRODUCT_FRONT_URL, 
+      process.env.CHROME_EXTENSION_URL
+    ],
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization, csrf-token',
   })
-  // cookieを解析する
   app.use(cookieParser());
-
-  // csrfトークンの設定
   app.use(
     csurf({
-      // cookieにcsrt-secretを設定する
       cookie: {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
       },
-      // リクエストヘッダーからcsrf-tokenを取得する
       value: (req: Request) => {
         return req.header('csrf-token')
      }

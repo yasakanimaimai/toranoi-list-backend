@@ -26,9 +26,6 @@ export class UserController {
   getLoginUser(@Req() req: Request) {
     return req.user;
   }
-  // getLoginUser(@Req() req: Request): Omit<User, 'hashedPassword'> {
-  //   return req.user;
-  // }
 
   @Patch('update')
   updateUser(
