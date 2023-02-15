@@ -5,14 +5,16 @@ import {
   Patch,
   Req,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@prisma/client';
+import { CreateUserDto } from './dto/createUser.dto';
 
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -25,6 +27,14 @@ export class UserController {
   @Get('get')
   getLoginUser(@Req() req: Request) {
     return req.user;
+  }
+
+  @Post('create')
+  createUser(
+    @Req() req: Request,
+    @Body() dto: CreateUserDto,
+  ): Promise<User> {
+    return this.userService.createUser(dto);
   }
 
   @Patch('update')
